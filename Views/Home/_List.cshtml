@@ -1,0 +1,25 @@
+﻿@model IEnumerable<System.IO.FileInfo>
+
+@{
+    Layout = null;
+}
+
+
+<table class="table">
+    <tr>
+        <th>
+            Имя подготовленного файла
+        </th>
+    </tr>
+    @foreach (var item in Model.OrderByDescending(f => f.CreationTime))
+    {
+        <tr>
+            <td>
+                @Html.ActionLink(item.Name, "Download", new { Name = item.Name })
+            </td>
+            <td>
+                @Html.ActionLink("Удалить", "Delete", new { Name = item.Name })
+            </td>
+        </tr>
+    }
+</table>

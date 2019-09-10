@@ -1,0 +1,48 @@
+﻿@model IEnumerable<System.IO.FileInfo>
+
+@{
+    ViewData["Title"] = "Файлы";
+}
+
+<div class="text-center">
+    <h1 class="display-4">Добро пожаловать!</h1>
+    <p>Для очистки текста в файле, выберите файл и загрузите его на сервер</p>
+    <form asp-controller="Home" asp-action="UploadFile" method="post" enctype="multipart/form-data">
+        <input type="file" name="file" accept=".csv, application/vnd.openxmlformats-officedocument.spreadsheetml.sheet, application/vnd.ms-excel" />
+        <button type="submit">Upload File</button>
+    </form>
+</div>
+
+
+<div id="modalDialog" class="modal" role="dialog">
+    <div class="modal-dialog">
+        <div id="modalContainer" class="modal-content">
+        </div>
+    </div>
+</div>
+<br>
+
+<script>
+    $(document).ready(getAndRenderUsersTable);
+
+    function getAndRenderUsersTable() {
+        $.get('@Url.Action("List")', function (data) {
+            $("#table-wrapper").html(data);
+            addModalWindowsEventListener();
+        });
+    }
+
+    function addModalWindowsEventListener() {
+        $('.modal-button').click(function () {
+            var url = $(this).data('url');
+            $.get(url, function (data) {
+                $('#modalContainer').html(data);
+                $('#modalDialog').modal({ keyboard: true, show: true});
+                $('#modalDialog').on('hidden.bs.modal', getAndRenderUsersTable);
+                $.validator.unobtrusive.parse("#validatedFormId");
+            });
+        });
+    };
+</script>
+
+<div id="table-wrapper"></div>
